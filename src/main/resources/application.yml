@@ -1,0 +1,32 @@
+server:
+  tomcat:
+    threads:
+      max: 1
+      min-spare: 1
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
+    session:
+      timeout: 30m
+
+spring:
+  #    cache:
+  #    type: caffeine
+  #    caffeine:
+  #      spec: maximumSize=100,expireAfterWrite=7d
+  profiles:
+    active: "@profileActive@"
+  # 不检查/template
+  thymeleaf:
+    check-template-location: false
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+
+logging:
+  file:
+    path: logs/

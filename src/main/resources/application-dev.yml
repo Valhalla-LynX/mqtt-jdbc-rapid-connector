@@ -1,0 +1,70 @@
+server:
+  port: 9996
+management: #actuator
+  server:
+    port: 9997
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "*"
+
+spring:
+  application:
+    name: DatabaseConnector
+  boot:
+    admin:
+      client:
+        instance:
+          service-url: http://localhost:9996
+        url: http://localhost:9996
+  datasource:
+    hikari:
+      pool-name: HikariCP
+      auto-commit: true
+      minimum-idle: 1
+      maximum-pool-size: 4 # 4 + private
+      connection-timeout: 30000
+      keepalive-time: 30000
+      idle-timeout: 0
+      max-lifetime: 0
+      connection-test-query: SELECT 1
+      register-mbeans: true
+    # master 分支必选
+    master:
+      key: clickhouse
+      type: com.zaxxer.hikari.HikariDataSource
+      driverClassName: ru.yandex.clickhouse.ClickHouseDriver
+      url: jdbc:clickhouse://192.168.50.148:8123?rewriteBatchedStatements=true
+      db: default
+      username: default
+      password: bjdv2020
+      socketTimeout: 6000000
+    cluster:
+      - key: mysql
+        type: com.zaxxer.hikari.HikariDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.50.148:3306/water?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: bjdv2020
+#  redis:
+#    database: 0
+#    host: 192.168.50.155
+#    password: null
+#    port: 6380
+#    timeout: 300
+
+mqtt:
+  clientId: "dbc_dev0"
+  host: "tcp://192.168.50.148:1883"
+  qos: 0
+  username: "admin"
+  password: "bjdv2020"
+
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#logging:
+#  level:
+#    root: debug
