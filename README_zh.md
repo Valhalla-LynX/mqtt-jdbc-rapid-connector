@@ -71,7 +71,7 @@ Get all connections.
 Get all datasource.
 
 ## 表现测试
-一个简单的测而。
+一个简单的测试。
 
 |写入模式|完成总时间|平均时间|
 |---|---|---|
