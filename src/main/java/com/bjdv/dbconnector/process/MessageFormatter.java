@@ -3,7 +3,7 @@ package com.bjdv.dbconnector.process;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bjdv.dbconnector.mqtt.MqttTopicHolder;
-import com.bjdv.dbconnector.mqtt.MqttTopicModel;
+import com.bjdv.dbconnector.model.TopicModel;
 import com.bjdv.dbconnector.utils.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -41,12 +41,12 @@ public class MessageFormatter {
     }
 
     // todo remove
-    public void offerMessage(MqttTopicModel mqttTopicModel, MqttMessage mqttMessage) {
+    public void offerMessage(TopicModel mqttTopicModel, MqttMessage mqttMessage) {
         executor.execute(new MessageChecker(mqttTopicModel, mqttMessage));
     }
 
     // todo remove
-    public void offerMessage(MqttTopicModel mqttTopicModel, JSONObject jsonObject) {
+    public void offerMessage(TopicModel mqttTopicModel, JSONObject jsonObject) {
         executor.execute(new MessageChecker(mqttTopicModel, jsonObject));
     }
 
@@ -58,7 +58,7 @@ public class MessageFormatter {
         StringBuilder multipleData;
 
         public MessageChecker(String topic, MqttMessage mqttMessage) {
-            MqttTopicModel mqttTopicModel = mqttTopicHolder.getTopics().get(topic);
+            TopicModel mqttTopicModel = mqttTopicHolder.getTopics().get(topic);
             this.topic = mqttTopicModel.getTopic();
             data = getAndCheckMessage(mqttTopicModel, JSONObject.parseObject(mqttMessage.toString()));
             if (data == null) {
@@ -68,7 +68,7 @@ public class MessageFormatter {
         }
 
         // todo remove
-        public MessageChecker(MqttTopicModel mqttTopicModel, MqttMessage mqttMessage) {
+        public MessageChecker(TopicModel mqttTopicModel, MqttMessage mqttMessage) {
             this.topic = mqttTopicModel.getTopic();
             data = getAndCheckMessage(mqttTopicModel, JSONObject.parseObject(mqttMessage.toString()));
             if (data == null) {
@@ -78,7 +78,7 @@ public class MessageFormatter {
         }
 
         // todo remove
-        public MessageChecker(MqttTopicModel mqttTopicModel, JSONObject jsonObject) {
+        public MessageChecker(TopicModel mqttTopicModel, JSONObject jsonObject) {
             this.topic = mqttTopicModel.getTopic();
             data = getAndCheckMessage(mqttTopicModel, jsonObject);
             if (data == null) {
@@ -87,7 +87,7 @@ public class MessageFormatter {
             }
         }
 
-        public String getAndCheckMessage(MqttTopicModel mqttTopicModel, JSONObject jsonObject) {
+        public String getAndCheckMessage(TopicModel mqttTopicModel, JSONObject jsonObject) {
             String type = jsonObject.getString("type");
             String table = jsonObject.getString("table");
             JSONArray array = jsonObject.getJSONArray("data");
@@ -116,7 +116,7 @@ public class MessageFormatter {
             }
         }
 
-        private String getValueAndCheck(MqttTopicModel mqttTopicModel, JSONArray array) {
+        private String getValueAndCheck(TopicModel mqttTopicModel, JSONArray array) {
             String colVal;
             singleData.delete(0, singleData.length());
             singleData.append('(');
@@ -125,7 +125,7 @@ public class MessageFormatter {
                 if (colVal == null) {
                     return null;
                 }
-                if (mqttTopicModel.getType()[i] == MqttTopicModel.DataType.Number) {
+                if (mqttTopicModel.getType()[i] == TopicModel.DataType.Number) {
                     try {
                         Long.valueOf(colVal);
                         singleData.append(colVal);
@@ -145,7 +145,7 @@ public class MessageFormatter {
             return singleData.toString();
         }
 
-        private String getValuesAndCheck(MqttTopicModel mqttTopicModel, JSONArray array) {
+        private String getValuesAndCheck(TopicModel mqttTopicModel, JSONArray array) {
             multipleData.delete(0, multipleData.length());
             JSONArray singleJson;
             String singleVal;

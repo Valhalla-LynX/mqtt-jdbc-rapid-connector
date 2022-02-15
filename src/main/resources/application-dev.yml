@@ -41,12 +41,25 @@ spring:
       password: bjdv2020
       socketTimeout: 6000000
     cluster:
-      - key: mysql
-        type: com.zaxxer.hikari.HikariDataSource
-        driverClassName: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://192.168.50.148:3306/water?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-        username: root
-        password: bjdv2020
+#      - key: mysql
+#        type: com.zaxxer.hikari.HikariDataSource
+#        driverClassName: com.mysql.cj.jdbc.Driver
+#        url: jdbc:mysql://192.168.50.148:3306/water?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#        username: root
+#        password: bjdv2020
+  kafka:
+    bootstrap-servers: 192.168.50.222:9092
+    consumer:
+      enable-auto-commit: false
+      auto-commit-interval: 100ms
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        session.timeout.ms: 15000
+    listener:
+      concurrency: 2
+      ack-mode: manual_immediate
+      missing-topics-fatal: false
 #  redis:
 #    database: 0
 #    host: 192.168.50.155

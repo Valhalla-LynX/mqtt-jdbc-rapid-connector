@@ -1,4 +1,4 @@
-package com.bjdv.dbconnector.mqtt;
+package com.bjdv.dbconnector.model;
 
 import com.bjdv.dbconnector.direct.JDBCHolder;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @create: 2021-10-27 17:28
  **/
 @Data
-public class MqttTopicModel implements Serializable {
+public class TopicModel {
     private String datasource = JDBCHolder.getMaster();
     @NotBlank(message = "topic required")
     private String topic;

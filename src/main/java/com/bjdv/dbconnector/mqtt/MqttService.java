@@ -1,6 +1,7 @@
 package com.bjdv.dbconnector.mqtt;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bjdv.dbconnector.model.TopicModel;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
@@ -18,16 +19,15 @@ import org.springframework.stereotype.Service;
 public class MqttService {
     private MqttConfig mqttConfig;
     private MqttTopicHolder mqttTopicHolder;
-    private MqttSubscriber2ClickHouse subscriber;
+    private MqttSubscriber2JDBC subscriber;
     private MqttClient client;
 
-    @DependsOn("initMqttSubscriber2ClickHouse")
     @Autowired
-    private void intiMqttSubscriber(MqttConfig mqttConfig, MqttTopicHolder mqttTopicHolder, MqttSubscriber2ClickHouse subscriber) {
+    @DependsOn("initMqttSubscriber2ClickHouse")
+    private void intiMqttSubscriber(MqttConfig mqttConfig, MqttTopicHolder mqttTopicHolder, MqttSubscriber2JDBC subscriber) {
         this.mqttConfig = mqttConfig;
         this.mqttTopicHolder = mqttTopicHolder;
         this.subscriber = subscriber;
-        // subscriber.setMqttService(this);
     }
 
     protected void clientInit() {
@@ -90,7 +90,7 @@ public class MqttService {
         }
     }
 
-    public void subscribe(MqttTopicModel topic) {
+    public void subscribe(TopicModel topic) {
         if (topic.getShare() != null) {
             subscribe(topic.getShare() + topic.getTopic());
         } else {
@@ -107,7 +107,7 @@ public class MqttService {
         }
     }
 
-    public void unsubscribe(MqttTopicModel topic) {
+    public void unsubscribe(TopicModel topic) {
         if (topic.getShare() != null) {
             unsubscribe(topic.getShare() + topic.getTopic());
         } else {

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class MqttSubscriber2ClickHouse implements MqttCallback {
+public class MqttSubscriber2JDBC implements MqttCallback {
     private MqttTopicHolder mqttTopicHolder;
     private MessageFormatter messageFormatter;
     // private MqttService mqttService;
