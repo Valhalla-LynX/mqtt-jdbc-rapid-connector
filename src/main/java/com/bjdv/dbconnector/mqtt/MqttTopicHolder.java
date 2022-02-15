@@ -1,6 +1,7 @@
 package com.bjdv.dbconnector.mqtt;
 
 import com.bjdv.dbconnector.direct.DirectService;
+import com.bjdv.dbconnector.model.TopicModel;
 import com.bjdv.dbconnector.process.MessageBufferProcessorManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,13 @@ import java.util.Map;
 @Configuration
 @Slf4j
 public class MqttTopicHolder implements Serializable {
-    private static final String SER = System.getProperty("user.dir") + "/data/topic.ser";
-    private final Map<String, MqttTopicModel> topics = new HashMap<>();
-    //    private CheckService checkService;
+    private static final String SER = System.getProperty("user.dir") + "/data/mqtt_topic.ser";
+    private final Map<String, TopicModel> topics = new HashMap<>();
     private DirectService directService;
     private MqttService mqttService;
     private MessageBufferProcessorManager messageProcessorManager;
 
-    public Map<String, MqttTopicModel> getTopics() {
+    public Map<String, TopicModel> getTopics() {
         return topics;
     }
 
@@ -43,7 +43,7 @@ public class MqttTopicHolder implements Serializable {
         this.messageProcessorManager = messageProcessorManager;
     }
 
-    public boolean addTopic(MqttTopicModel topic) {
+    public boolean addTopic(TopicModel topic) {
 //        if (checkService.checkTable(topic.getTable())) {
         if (directService.checkTable(topic.getDatasource(), topic.getTable())) {
             if (topics.get(topic.getTopic()) != null) {
@@ -59,7 +59,7 @@ public class MqttTopicHolder implements Serializable {
         return false;
     }
 
-    public void removeTopic(MqttTopicModel topic) {
+    public void removeTopic(TopicModel topic) {
         String name = topic.getTopic();
         if (messageProcessorManager.getManagerMap().containsKey(topic.getTopic())) {
             mqttService.unsubscribe(topic);
@@ -84,10 +84,10 @@ public class MqttTopicHolder implements Serializable {
             try (FileInputStream fis = new FileInputStream(file); ObjectInputStream in = new ObjectInputStream(fis)) {
                 Map<?, ?> map = (Map<?, ?>) in.readObject();
                 for (Map.Entry<?, ?> topic : map.entrySet()) {
-                    topics.put(String.valueOf(topic.getKey()), (MqttTopicModel) topic.getValue());
-                    MqttTopicModel topicModel = (MqttTopicModel) topic.getValue();
+                    topics.put(String.valueOf(topic.getKey()), (TopicModel) topic.getValue());
+                    TopicModel topicModel = (TopicModel) topic.getValue();
                     messageProcessorManager.activeTopicProcessor(topicModel);
-                    mqttService.subscribe((MqttTopicModel) topic.getValue());
+                    mqttService.subscribe((TopicModel) topic.getValue());
                 }
                 log.info("加载订阅");
             } catch (IOException | ClassNotFoundException e) {

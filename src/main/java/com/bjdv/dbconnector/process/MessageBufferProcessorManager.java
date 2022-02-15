@@ -2,7 +2,7 @@ package com.bjdv.dbconnector.process;
 
 import com.bjdv.dbconnector.direct.JDBCHolder;
 import com.bjdv.dbconnector.mqtt.MqttTopicHolder;
-import com.bjdv.dbconnector.mqtt.MqttTopicModel;
+import com.bjdv.dbconnector.model.TopicModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class MessageBufferProcessorManager {
         this.mqttTopicHolder = mqttTopicHolder;
     }
 
-    public void activeTopicProcessor(MqttTopicModel mqttTopicModel) {
+    public void activeTopicProcessor(TopicModel mqttTopicModel) {
         String datasource = mqttTopicModel.getDatasource();
         String topic = mqttTopicModel.getTopic();
         String table = mqttTopicModel.getTable();
@@ -42,7 +42,7 @@ public class MessageBufferProcessorManager {
         managerMap.get(topic).start();
     }
 
-    public void inactiveTopicProcessor(MqttTopicModel mqttTopicModel) {
+    public void inactiveTopicProcessor(TopicModel mqttTopicModel) {
         String topic = mqttTopicModel.getTopic();
         close(topic);
         try {

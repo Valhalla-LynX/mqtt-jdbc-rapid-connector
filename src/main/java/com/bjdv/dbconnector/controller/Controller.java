@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bjdv.dbconnector.direct.JDBCHolder;
 import com.bjdv.dbconnector.mqtt.MqttTopicHolder;
-import com.bjdv.dbconnector.mqtt.MqttTopicModel;
+import com.bjdv.dbconnector.model.TopicModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -60,7 +60,7 @@ public class Controller {
     }
 
     @RequestMapping("/setTopic")
-    public String setTopic(@Valid MqttTopicModel topic) {
+    public String setTopic(@Valid TopicModel topic) {
         if (topicSerializable.addTopic(topic)) {
             log.info("保存订阅");
             return "success";
@@ -71,7 +71,7 @@ public class Controller {
 
     @RequestMapping("/rmTopic")
     public String rmTopic(String name) {
-        MqttTopicModel mqttTopicModel = topicSerializable.getTopics().get(name);
+        TopicModel mqttTopicModel = topicSerializable.getTopics().get(name);
         if (mqttTopicModel!=null) {
             topicSerializable.removeTopic(mqttTopicModel);
         }
