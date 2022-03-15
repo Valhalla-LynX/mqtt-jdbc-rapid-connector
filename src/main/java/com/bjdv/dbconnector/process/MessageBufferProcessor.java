@@ -28,7 +28,7 @@ public class MessageBufferProcessor extends Thread {
     private final String table;
     private final JDBCHolder jdbcHolder;
     private final MqttTopicHolder mqttTopicHolder;
-    private clonfinal MessageBuffer list;
+    private final MessageBuffer list;
     private final ExecutorService executor;
     private boolean flag = true;
     private int waitFactor = 0;
